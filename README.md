@@ -24,8 +24,9 @@
 <table>
     <thead>
         <tr>
-            <th style="text-align:center;"><a href="">김유빈</a></th>
-            <th style="text-align:center;"><a href="">송승호</a></th>
+            <th style="text-align:center;"><a href="https://github.com/yubin21">김유빈</a></th>
+            <th style="text-align:center;"><a href="https://github.com/SeungHo0422">송승호</a></th>
+            <th style="text-align:center;"><a href="https://github.com/HaJunYoo">유하준</a></th>            
             <th style="text-align:center;"><a href="https://github.com/siyeons">이시연</a></th>
             <th style="text-align:center;"><a href="https://github.com/0417taehyun">이태현</a></th>
             <th style="text-align:center;"><a href="https://github.com/twoosky">이하늘</a></th>
@@ -36,6 +37,7 @@
         <tr>
             <td><img src="https://avatars.githubusercontent.com/u/80163835?v=4" width="250"/></td>
             <td><img src="https://avatars.githubusercontent.com/u/57624937?v=4" width="250"/></td>
+            <td><img src="https://avatars.githubusercontent.com/u/58240677?v=4" width="250"/></td>
             <td><img src="https://avatars.githubusercontent.com/u/35549653?v=4" width="250"/></td>
             <td><img src="https://avatars.githubusercontent.com/u/63915557?v=4" width="250"/></td>
             <td><img src="https://avatars.githubusercontent.com/u/50009240?v=4" width="250"/></td>
