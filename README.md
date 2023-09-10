@@ -6,16 +6,15 @@
 
 #### 일정
 
-**2023년 09월 03일 일요일**부터 **2023년 12월 10일 일요일**까지 총 14회차를 진행해요.
+**2023년 09월 03일 일요일**부터 **2023년 12월 3일 일요일**까지 총 12회차를 진행해요.
 
 #### 진행 방식
 
-아래와 같이 총 네 권의 책을 완독하며 기타 [LeetCode](https://leetcode.com/problemset/database/?status=AC&page=1&sorting=W3sic29ydE9yZGVyIjoiREVTQ0VORElORyIsIm9yZGVyQnkiOiJGUkVRVUVOQ1kifV0%3D) 등의 문제 풀이 서비스를 활용해 SQL 문제를 풀어요.
+아래와 같이 총 세 권의 책을 완독하며 기타 [LeetCode](https://leetcode.com/problemset/database/?status=AC&page=1&sorting=W3sic29ydE9yZGVyIjoiREVTQ0VORElORyIsIm9yZGVyQnkiOiJGUkVRVUVOQ1kifV0%3D) 등의 문제 풀이 서비스를 활용해 SQL 문제를 풀어요.
 
 1. [데이터베이스 첫걸음](https://product.kyobobook.co.kr/detail/S000001057883)
-2. [SQL 첫걸음](https://product.kyobobook.co.kr/detail/S000001057649)
-3. [SQL 레벨업](https://product.kyobobook.co.kr/detail/S000001057669)
-4. [업무에 바로 쓰는 SQL 튜닝](https://product.kyobobook.co.kr/detail/S000001810409)
+2. [SQL 레벨업](https://product.kyobobook.co.kr/detail/S000001057669)
+3. [업무에 바로 쓰는 SQL 튜닝](https://product.kyobobook.co.kr/detail/S000001810409)
 
 이때 각자 학습한 내용 및 문제 풀이 결과는 [Document](./Document/) 디렉터리에 공유해요.
 
