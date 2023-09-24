@@ -41,7 +41,7 @@
     - @hour은 초기값을 -1로 설정합니다. PL/-SQL 문법에서 :=은 비교 연산자 =과 혼동을 피하기 위한의 대입 연산입니다.
     - SELECT (@hour := @hour +1) 은 @hour의 값에 1씩 증가시키면서 SELECT 문 전체를 실행.
     ```sql
-    SET @hour := -1; -- 변수 선언
+    SET @hour := -1; -- 변수 선언 
 
     SELECT (@hour := @hour + 1) as HOUR,
     (SELECT COUNT(*) FROM ANIMAL_OUTS WHERE HOUR(DATETIME) = @hour) as COUNT
