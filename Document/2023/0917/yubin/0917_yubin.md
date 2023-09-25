@@ -85,3 +85,45 @@
     
     - 외래키를 통한 엔티티 간의 관련성 표현
     - 1:1 관계, 1:N 관계 등 표현 가능
+
+### + 추가 - 문제풀이
+> [입양 시각 구하기(2)](https://school.programmers.co.kr/learn/courses/30/lessons/59413)
+
+**recursive CTE solution**
+
+```
+WITH RECURSIVE TIMETABLE(HOUR) AS (
+    SELECT 0
+    UNION
+    SELECT TIMETABLE.HOUR + 1 FROM TIMETABLE WHERE TIMETABLE.HOUR < 23
+)
+
+SELECT HOUR, COUNT(A.ANIMAL_ID)
+FROM TIMETABLE AS T LEFT JOIN ANIMAL_OUTS AS A ON T.HOUR = HOUR(A.DATETIME)
+GROUP BY HOUR
+ORDER BY HOUR
+```
+
+1. RECURSIVE CTE 사용하여 시간대별로 0부터 23까지의 숫자를 생성
+2. TIMETABLE과 ANIMAL_OUTS를 LEFT JOIN하여 시간대별로 ANIMAL_OUTS 데이터와 일치
+3. 시간대별로 ANIMAL_ID의 COUNT를 계산하고 결과를 반환
+4. 시간대 순 정렬
+
+**other solution**
+
+```
+SET @HOUR = -1;
+SELECT (@HOUR := @HOUR +1) AS HOUR,
+    (SELECT COUNT(HOUR(DATETIME)) 
+    FROM ANIMAL_OUTS 
+    WHERE HOUR(DATETIME)=@HOUR) AS COUNT 
+    FROM ANIMAL_OUTS
+WHERE @HOUR < 23;
+```
+
+출처: https://jaaamj.tistory.com/155
+
+1. @HOUR 변수를 선언하고 -1로 초기화
+2. 하위 쿼리를 사용하여 시간대별로 ANIMAL_OUTS 테이블의 데이터를 계산
+3. @HOUR 변수를 1씩 증가시키면서 시간대별로 COUNT를 계산하고 결과를 반환
+4. @HOUR 값이 23보다 작은 경우에만 데이터를 처리
