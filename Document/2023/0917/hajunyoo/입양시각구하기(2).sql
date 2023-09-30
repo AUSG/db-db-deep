@@ -14,13 +14,13 @@ ORDER BY 1
 /*
 DESC ANIMAL_OUTS; 
 ANIMAL_ID -> primary key null x
+/*
 
 DATE_FORMAT : 날짜를 원하는 형식으로 변환
 -> %H : 시간을 24시간 형식으로 변환 -> 08로 찍히는 문제점
 이를 숫자로 변환이 필요
 
 문자를 숫자로 숫자를 문자로 변환(CAST)
-
 
 하지만 이 테이블은 6시 이전부터 데이터가 존재하지 않기 때문에 생성해줘야 한다
 
@@ -53,6 +53,7 @@ LEFT JOIN ANIMAL_OUTS AS ANI ON TIME.HOUR = HOUR(ANI.DATETIME)
 GROUP BY TIME.HOUR
 
 /*
+
 SQL 쿼리에서 WITH RECURSIVE 구문은 Common Table Expressions (CTE)를 정의하는 데 사용됩니다. 
 CTE는 일시적인 결과 집합을 생성하는 데 사용되며, 
 이 결과 집합은 쿼리 내에서 하나 이상의 SELECT 문에서 사용할 수 있습니다.
