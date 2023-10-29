@@ -340,3 +340,218 @@ Oracle에서는 `NESTED LOOP` 라고 나오고, postgreSQL에서도 `Nested Loop
 Oracle이나 MySQL등에서 가지는 힌트 구. 이를 사용하면 SQL 구문에서 옵티마이저에게 강제적으로 명령 가능.
 
 실행 계획을 변경하려면 어떤 선택지가 있는지를 알아야 함
+
+# 프로그래머스 문제 풀이
+
+## 1. 오랜 기간 보호한 동물(2)
+
+[](https://school.programmers.co.kr/learn/courses/30/lessons/59411)
+
+입양을 간 동물 중, 보호 기간이 가장 길었던 동물 두 마리의 아이디와 이름을 조회하는 SQL문을 작성해주세요. 이때 결과는 보호 기간이 긴 순으로 조회해야 합니다
+
+ANIMAL_INS 테이블 예시
+
+| ANIMAL_ID | ANIMAL_TYPE | DATETIME            | INTAKE_CONDITION | NAME       | SEX_UPON_INTAKE |
+| --------- | ----------- | ------------------- | ---------------- | ---------- | --------------- |
+| A354597   | Cat         | 2014-05-02 12:16:00 | Normal           | Ariel      | Spayed Female   |
+| A362707   | Dog         | 2016-01-27 12:27:00 | Sick             | Girly Girl | Spayed Female   |
+| A370507   | Cat         | 2014-10-27 14:43:00 | Normal           | Emily      | Spayed Female   |
+| A414513   | Dog         | 2016-06-07 09:17:00 | Normal           | Rocky      | Neutered Male   |
+
+ANIMAL_OUTS 테이블 예시
+
+| ANIMAL_ID | ANIMAL_TYPE | DATETIME            | NAME       | SEX_UPON_OUTCOME |
+| --------- | ----------- | ------------------- | ---------- | ---------------- |
+| A354597   | Cat         | 2014-06-03 12:30:00 | Ariel      | Spayed Female    |
+| A362707   | Dog         | 2017-01-10 10:44:00 | Girly Girl | Spayed Female    |
+| A370507   | Cat         | 2015-08-15 09:24:00 | Emily      | Spayed Female    |
+
+SQL문을 실행하면 다음과 같이 나와야 합니다.
+
+| ANIMAL_ID | NAME       |
+| --------- | ---------- |
+| A362707   | Girly Girl |
+| A370507   | Emily      |
+
+※ 입양을 간 동물이 2마리 이상인 경우만 입력으로 주어집니다.
+
+### 풀이
+
+```sql
+-- 코드를 입력하세요
+SELECT ANIMAL_OUTS.ANIMAL_ID, ANIMAL_OUTS.NAME
+FROM ANIMAL_OUTS, ANIMAL_INS
+WHERE ANIMAL_OUTS.ANIMAL_ID = ANIMAL_INS.ANIMAL_ID
+ORDER BY DATEDIFF(ANIMAL_OUTS.DATETIME, ANIMAL_INS.DATETIME) DESC # DATEDIFF 함수를 이용하여 날짜 차 계산(보호소 나간 날 - 들어온 날), DESC 통해 정렬
+LIMIT 2
+```
+
+### 다른 풀이
+
+> Ref. [https://devwarriorjungi.tistory.com/entry/프로그래머스-59411-MySQL-Level3-오랜-기간-보호한-동물2](https://devwarriorjungi.tistory.com/entry/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-59411-MySQL-Level3-%EC%98%A4%EB%9E%9C-%EA%B8%B0%EA%B0%84-%EB%B3%B4%ED%98%B8%ED%95%9C-%EB%8F%99%EB%AC%BC2)
+
+```sql
+SELECT I.ANIMAL_ID, I.NAME
+FROM ANIMAL_INS AS I
+RIGHT JOIN ANIMAL_OUTS AS O ON I.ANIMAL_ID = O.ANIMAL_ID
+ORDER BY DATEDIFF(O.DATETIME, I.DATETIME) DESC # O.DATETIME - I.DATETIME. ****내림차순 정렬하여 큰 수부터 나열시켜, 보호기간이 긴것부터 나열
+LIMIT 2; # LIMIT 2를 이용하여 값을 2개만 표시
+```
+
+ANIMAL_INS와 ANIMAL_OUTS 테이블을 RIGHT JOIN하여 ANIMAL_ID가 일치하는 레코드를 가져오고, 만약 ANIMAL_INS 테이블에 해당 ANIMAL_ID가 없는 경우, NULL
+
+| ANIMAL_ID | NAME       |
+| --------- | ---------- |
+| A354597   | Ariel      |
+| A362707   | Girly Girl |
+| A370507   | Emily      |
+| NULL      | Rocky      |
+
+![스크린샷 2023-10-29 오후 7.44.20.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/2be15c52-7235-41c4-949c-684add48adab/bfbc82d0-1a6d-4deb-a844-03862ea17295/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-10-29_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.44.20.png)
+
+**※ RIGHT JOIN해서 우측 테이블인 ANIMAL_OUTS의 정보만 사용하는데 굳이 왜 JOIN을 하는지?**
+
+그 이유는 DATEDIFF를 통해 같은 아이디를 가진 동물의 보호기간을 구해주기 위해!
+
+또한, ANIMAL_INS 값은 없고 ANIMAL_OUTS에만 값이 있는 영역은 DATEDIFF 값으로 NULL이 나오고
+
+보호기간 내림차순으로 정렬했을 때, 맨 아래에 위치하게 됩니다.
+
+### cf.
+
+같은 데이터(Kaggle의 "Austin Animal Center Shelter Intakes and Outcomes”) 를 사용한 다른 문제
+
+[](https://school.programmers.co.kr/learn/courses/30/lessons/59040)
+
+```sql
+-- 코드를 입력하세요
+SELECT ANIMAL_TYPE, COUNT(*) AS count
+FROM ANIMAL_INS
+GROUP BY ANIMAL_TYPE
+ORDER BY ANIMAL_TYPE;
+```
+
+고양이와 개가 몇 마리인지 조회 - 동물 별로 GROUP BY - Dog 보다 Cat이 앞이므로 오름차순
+
+## 2. 헤비 유저가 소유한 장소
+
+[](https://school.programmers.co.kr/learn/courses/30/lessons/77487)
+
+### 문제
+
+이 서비스에서는 공간을 둘 이상 등록한 사람을 "헤비 유저"라고 부릅니다. 헤비 유저가 등록한 공간의 정보를 아이디 순으로 조회하는 SQL문을 작성해주세요.
+
+예를 들어, `PLACES` 테이블이 다음과 같다면
+
+| ID       | NAME                                            | HOST_ID  |
+| -------- | ----------------------------------------------- | -------- |
+| 4431977  | BOUTIQUE STAYS - Somerset Terrace, Pet Friendly | 760849   |
+| 5194998  | BOUTIQUE STAYS - Elwood Beaches 3, Pet Friendly | 760849   |
+| 16045624 | Urban Jungle in the Heart of Melbourne          | 30900122 |
+| 17810814 | Stylish Bayside Retreat with a Luscious Garden  | 760849   |
+| 22740286 | FREE PARKING - The Velvet Lux in Melbourne CBD  | 30900122 |
+| 22868779 | ★ Fresh Fitzroy Pad with City Views! ★          | 21058208 |
+
+- 760849번 유저는 공간을 3개 등록했으므로 이 유저는 헤비유저입니다.
+- 30900122번 유저는 공간을 2개 등록했으므로 이 유저는 헤비유저입니다.
+- 21058208번 유저는 공간을 1개 등록했으므로 이 유저는 헤비유저가 아닙니다.
+
+따라서 SQL 문을 실행하면 다음과 같이 나와야 합니다.
+
+| ID       | NAME                                            | HOST_ID  |
+| -------- | ----------------------------------------------- | -------- |
+| 4431977  | BOUTIQUE STAYS - Somerset Terrace, Pet Friendly | 760849   |
+| 5194998  | BOUTIQUE STAYS - Elwood Beaches 3, Pet Friendly | 760849   |
+| 16045624 | Urban Jungle in the Heart of Melbourne          | 30900122 |
+| 17810814 | Stylish Bayside Retreat with a Luscious Garden  | 760849   |
+| 22740286 | FREE PARKING - The Velvet Lux in Melbourne CBD  | 30900122 |
+
+### 풀이
+
+```sql
+-- 코드를 입력하세요
+SELECT ID, NAME, HOST_ID
+FROM PLACES
+WHERE HOST_ID IN ( # 서브쿼리 - HOST_ID 그룹화하고 그룹의 행 수가 2 이상인 HOST_ID 조회
+    SELECT HOST_ID
+    FROM PLACES
+    GROUP BY HOST_ID
+    HAVING COUNT (ID) >= 2)
+ORDER BY ID # id기준 오름차순 정렬
+```
+
+### 다른 풀이
+
+> Ref. https://wellbell.tistory.com/156
+
+1. 집계함수 COUNT + PARTITION BY
+
+실행계획을 보면 메인 쿼리와 서브 쿼리 둘다 인덱스를 타지 않고 풀스캔을 하고 둘다에서 filesort가 발생한다.
+
+3가지 방법 중 성능이 가장 별로일거라고 생각이 든다.
+
+```sql
+SELECT PL.ID, PL.NAME, PL.HOST_ID
+FROM
+    (
+        SELECT * , COUNT(*) OVER (PARTITION BY HOST_ID) AS HOST_COUNT
+        FROM PLACES
+    ) PL
+WHERE PL.HOST_COUNT > 1
+ORDER BY PL.ID;
+```
+
+2. GROUP BY + IN절
+
+메인 쿼리는 INDEX 스캔을 사용하고 filesort 또한 발생하지 않는다.
+
+IN절은 존재하는 값을 전부 확인한다는 점에서 아래에서 사용한 EXISTS보다 성능이 낮을 것으로 생각이 된다.
+
+```sql
+SELECT *
+FROM PLACES PL1
+WHERE PL1.HOST_ID IN (
+                        SELECT HOST_ID
+                        FROM PLACES
+                        GROUP BY HOST_ID
+                        HAVING COUNT(*) > 1
+                     )
+ORDER BY ID;
+```
+
+3. GROUP BY + EXISTS
+
+IN절을 사용했을 때와 다른점은 서브쿼리의 WHERE에 의한 차이이며
+
+EXISTS는 해당 값의 존재 여부만 체크하므로 3가지 중 가장 좋은 성능을 보일 것으로 생각이 된다.
+
+```sql
+SELECT *
+FROM PLACES PL1
+WHERE EXISTS (
+                SELECT 1
+                FROM PLACES PL2
+                WHERE PL1.HOST_ID = PL2.HOST_ID
+                GROUP BY HOST_ID
+                HAVING COUNT(*) > 1
+             )
+ORDER BY ID;
+```
+
+### Simple IN vs EXISTS
+
+> 2번과 3번 풀이 추가 설명
+
+- IN 절의 괄호() 사이에는 특정 값이나, 서브쿼리가 올 수 있지만, EXISTS의 괄호() 사이에는 서브쿼리만 올 수 있다.
+- IN 절에서는 괄호 안에 있는 특정 값이나 서브쿼리의 결과 값이 있는지 체크 (IN 쿼리 → 메인 쿼리)
+  - 결국 서브 쿼리 결과를 모두 수행
+  - 실제 존재하는 데이터들의 모든 값까지 확인한다는 뜻
+- EXISTS는 괄호 안의 서브쿼리로부터 해당 값의 존재 유무만 체크한다. (메인쿼리 → EXISTS 쿼리)
+  - 한 건이라도 일치하는 결과가 있으면 더 이상 수행하지 않음
+  - 조건에 해당하는 ROW가 존재 유무만 확인하고, 더 이상 수행되지 않는다는 뜻
+
+**NOT IN과 NOT EXISTS의 NULL값에 대한 처리**
+
+NOT EXISTS : NULL 데이터에 대해 **TRUE**를 return.
+
+NOT IN : NULL 데이터에 대해 **FALSE를** return. NULL 처리를 하지 않을 경우 누락이 발생
